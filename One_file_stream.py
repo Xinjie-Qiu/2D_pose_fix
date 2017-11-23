@@ -114,7 +114,13 @@ for filename in filenames:
     tmp_num = 0
 
 
+
+
+
+
     for tmp_ms_point in ms_point:
+        # if it has pervious point and just copy it
+
         if(len(ms_point) < 30 and people_num == 1):
             frame_id = int(tmp_ms_point[0])*2
             joint_num = int(tmp_ms_point[1])-1
