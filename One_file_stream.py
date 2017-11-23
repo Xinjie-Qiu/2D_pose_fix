@@ -116,6 +116,39 @@ for filename in filenames:
     for tmp_ms_point in ms_point_fix:
         if (len(ms_point_fix) < 30 and people_num == 1):
             # if it has pervious point and just copy it
+            if (tmp_ms_point[0] == 0):
+                frame_id = int(tmp_ms_point[0]) * 2
+                joint_num = int(tmp_ms_point[1]) - 1
+                cap = cv2.VideoCapture(tmp_video_path)
+                cap.set(6, 30)
+                cap.set(1, frame_id)
+                ret, frame = cap.read()
+                frame = cv2.resize(frame, (960, 540), interpolation=cv2.INTER_LINEAR)
+                if (people_num == 1):
+                    for i in range(0, 18):
+                        joint1_x = int(float(lines[2 + 19 * int(tmp_ms_point[0]) + i + 1].split('\n')[0].split()[0]))
+                        joint1_y = int(float(lines[2 + 19 * int(tmp_ms_point[0]) + i + 1].split('\n')[0].split()[1]))
+                        cv2.circle(frame, (joint1_x, joint1_y), 2, (0, 255, 0), -1)
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                img = cv2.putText(frame, 'Filename:' + str(filename), (30, 30), font, 1, (255, 0, 0), 3)
+                img = cv2.putText(img, 'Frame_id:' + str(int(frame_id / 2)), (100, 100), font, 2, (255, 0, 0), 3)
+                img = cv2.putText(img, joint_name_list_eng[joint_num], (200, 200), font, 3, (255, 0, 0),
+                                  3)  # 添加文字，1.2表示字体大小，（0,40）是初始的位置，(255,255,255)表示颜色，2表示粗细
+                print(joint_name_list[joint_num])
+                cv2.namedWindow('image')
+                cv2.setMouseCallback('image', draw_circle)
+                while (1):
+                    cv2.imshow('image', frame)
+                    k = cv2.waitKey(1) & 0xFF
+                    if k == ord('m'):
+                        mode = not mode
+                    elif k == 27:
+                        break
+                line_num = 3 + frame_id * 19 + joint_num
+                tmp_string = '{} {} 0.000000\n'.format(XY_save_list[0][0], XY_save_list[0][1])
+                lines[line_num] = tmp_string
+                cap.release()
+                cv2.destroyAllWindows()
             if (tmp_ms_point[0] > 0 and lines[19 * (tmp_ms_point[0] - 1) + tmp_ms_point[1] + 2] != '0.000000 0.000000 0.000000\n'):
                 lines[19 * (tmp_ms_point[0]) + tmp_ms_point[1] + 2] = lines[19 * (tmp_ms_point[0] - 1) + tmp_ms_point[1] + 2]
 
