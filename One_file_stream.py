@@ -112,15 +112,15 @@ for filename in filenames:
     tmp_video_path = os.path.join(video_source_folder,video_name)
 
     tmp_num = 0
+    ms_point_fix = ms_point
+    for tmp_ms_point in ms_point_fix:
+        if (len(ms_point_fix) < 30 and people_num == 1):
+            # if it has pervious point and just copy it
+            if (tmp_ms_point[0] > 0 and lines[19 * (tmp_ms_point[0] - 1) + tmp_ms_point[1] + 2] != '0.000000 0.000000 0.000000\n'):
+                lines[19 * (tmp_ms_point[0]) + tmp_ms_point[1] + 2] = lines[19 * (tmp_ms_point[0] - 1) + tmp_ms_point[1] + 2]
 
-
-
-
-
-
+    ms_point = _get_missing_point(lines, filename)
     for tmp_ms_point in ms_point:
-        # if it has pervious point and just copy it
-
         if(len(ms_point) < 30 and people_num == 1):
             frame_id = int(tmp_ms_point[0])*2
             joint_num = int(tmp_ms_point[1])-1
@@ -159,10 +159,10 @@ for filename in filenames:
                 elif k == 27:
                     break
             tmp_num+=1
-    if (len(ms_point)!=0 and len(ms_point)<30 and people_num == 1):
+    if (len(ms_point) != 0 and len(ms_point) < 30 and people_num == 1):
         cap.release()
         cv2.destroyAllWindows()
-
+    if (len(ms_point_fix)!=0 and len(ms_point)<30 and people_num == 1):
         if (people_num==1):
 
             for i in range(0,len(ms_point)):
