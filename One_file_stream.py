@@ -103,6 +103,7 @@ for filename in filenames:
             f.write('{} out of range\n '.format(filename))
         filename_path = os.path.join(data_path, filename)
         os.remove(filename_path)
+        continue
     video_name = filename[:-4]+'.avi'
     action = int(filename[-11:-8])
     if action in [50,51,52,53,54,55,56,57,58,59,60]:
